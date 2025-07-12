@@ -5,18 +5,16 @@ import {
   Navigate,
 } from "react-router-dom";
 import React, { Suspense, lazy } from "react";
-import Home from "/imports/ui/views/home";
 import { Outlet } from "react-router-dom";
-import MainLayout from "/imports/layouts/main-layout";
-import SignUp from "../views/login";
 // Layouts
 const DashboardLayout = lazy(() => import("/imports/layouts/dashboard-layout"));
+const MainLayout = lazy(() => import("/imports/layouts/main-layout"));
 
 // Pages
-// const Home = lazy(() => import("../views/home"));
+const Home = lazy(() => import("../views/home"));
 // const ComingSoon = lazy(() => import("../pages/ComingSoon"));
 const Login = lazy(() => import("../views/login"));
-// const SignUp = lazy(() => import("../pages/SignUp"));
+// const Login = lazy(() => import("../views/Login"));
 // const Dashboard = lazy(() => import("../pages/Dashboard"));
 // const Clients = lazy(() => import("../pages/Clients"));
 
@@ -34,7 +32,7 @@ export const router = createBrowserRouter(
         <Route path="/home" element={<Home />} />
         {/* <Route path="/coming-soon" element={<ComingSoon />} /> */}
         <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<SignUp />} />
+        {/* <Route path="/cadastro" element={<SignUp />} /> */}
       </Route>
 
       <Route path="/dashboard" element={<DashboardLayout />}>

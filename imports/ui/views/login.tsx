@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Building2,
   User,
@@ -9,18 +9,36 @@ import {
 } from "lucide-react";
 import { WizardProvider } from "/imports/contexts/WizardContext";
 import SignupWizard, {
-  SIGNUP_STEPS,
+  CLIENT_STEPS,
+  ORGANIZATION_STEPS,
+  PROFESSIONAL_STEPS,
 } from "/imports/components/ui/SignupWizard";
 import LoginModal from "/imports/components/ui/LoginModal";
 
 type UserType = "client" | "professional" | "organization" | null;
 
-export default function LoginPage() {
+const LoginPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupWizard, setShowSignupWizard] = useState(false);
   const [selectedUserType, setSelectedUserType] = useState<UserType>(null);
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 0
+  );
+  const initialFormData = useMemo(
+    () => ({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      password: "",
+      passwordConfirmation: "",
+      cpf: "",
+      cnpj: "",
+      companyName: "",
+      plan: "free",
+      role: selectedUserType ?? "client",
+    }),
+    [selectedUserType]
   );
 
   // Handle window resize
@@ -85,6 +103,19 @@ export default function LoginPage() {
       setShowSignupWizard(true);
     }
   };
+
+  const SIGNUP_STEPS = useMemo(() => {
+    if (selectedUserType === "client") {
+      return CLIENT_STEPS;
+    }
+    if (selectedUserType === "professional") {
+      return PROFESSIONAL_STEPS;
+    }
+    if (selectedUserType === "organization") {
+      return ORGANIZATION_STEPS;
+    }
+    return CLIENT_STEPS;
+  }, [selectedUserType]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50/30 to-slate-100 flex items-center justify-center p-4">
@@ -213,7 +244,7 @@ export default function LoginPage() {
       )}
 
       {showSignupWizard && selectedUserType && (
-        <WizardProvider steps={SIGNUP_STEPS}>
+        <WizardProvider initialFormData={initialFormData} steps={SIGNUP_STEPS}>
           <SignupWizard
             userType={selectedUserType}
             onClose={() => {
@@ -225,4 +256,5 @@ export default function LoginPage() {
       )}
     </div>
   );
-}
+};
+export default LoginPage;

@@ -1,23 +1,10 @@
 import React from "react";
 import { Mail, Phone, User } from "lucide-react";
 import Input from "../ui/Input";
+import { useWizard } from "/imports/contexts/WizardContext";
 
-interface PersonalInfoStepProps {
-  formData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-  };
-  updateFormData: (field: string, value: string) => void;
-  errors?: Record<string, string>;
-}
-
-export default function PersonalInfoStep({
-  formData,
-  updateFormData,
-  errors,
-}: PersonalInfoStepProps) {
+const PersonalInfoStep: React.FC = () => {
+  const { updateFormData, formData, errors, setErrors } = useWizard();
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -71,4 +58,6 @@ export default function PersonalInfoStep({
       </Input.Root>
     </div>
   );
-}
+};
+
+export default PersonalInfoStep;

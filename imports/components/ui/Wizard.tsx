@@ -1,26 +1,14 @@
 import * as React from "react";
-import { useState, useMemo } from "react";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  useWizard,
-  WizardProvider,
-  WizardStep as WizardStepType,
-} from "/imports/contexts/WizardContext";
+import { useWizard } from "/imports/contexts/WizardContext";
 import { cn } from "/imports/utils";
 
 export interface WizardProps {
   children: React.ReactNode;
-  steps: WizardStepType[];
-  initialStep?: number;
   className?: string;
 }
 
-export function Wizard({
-  children,
-  steps,
-  initialStep,
-  className,
-}: WizardProps) {
+export function Wizard({ children, className }: WizardProps) {
   return (
     // <WizardProvider steps={steps} initialStep={initialStep}>
     <div className={cn("w-full", className)}>{children}</div>

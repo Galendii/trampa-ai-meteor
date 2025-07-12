@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { X, User, Lock, FileText, Check } from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { X, User, Lock, FileText, Check, ClipboardList } from "lucide-react";
 import {
   Wizard,
   WizardHeader,
@@ -35,146 +35,54 @@ interface FormData {
   cpf: string;
   cnpj?: string;
   companyName?: string;
+
+  // Step 4
+  plan: "free" | "basic" | "premium";
 }
 
-export const SIGNUP_STEPS = [
+export const CLIENT_STEPS = [
   { id: "personal", title: "Dados Pessoais", icon: User },
   { id: "security", title: "Segurança", icon: Lock },
   { id: "documentation", title: "Documentação", icon: FileText },
   { id: "success", title: "Sucesso", icon: Check },
 ];
 
+export const PROFESSIONAL_STEPS = [
+  { id: "personal", title: "Dados Pessoais", icon: User },
+  { id: "security", title: "Segurança", icon: Lock },
+  { id: "documentation", title: "Documentação", icon: FileText },
+  { id: "plan", title: "Plano", icon: ClipboardList },
+  { id: "success", title: "Sucesso", icon: Check },
+];
+
+export const ORGANIZATION_STEPS = [
+  { id: "personal", title: "Dados Pessoais", icon: User },
+  { id: "security", title: "Segurança", icon: Lock },
+  { id: "documentation", title: "Documentação", icon: FileText },
+  { id: "plan", title: "Plano", icon: ClipboardList },
+  { id: "success", title: "Sucesso", icon: Check },
+];
+
 export default function SignupWizard({ userType, onClose }: SignupWizardProps) {
-  const { currentStepId, nextStep, prevStep } = useWizard();
+  const { currentStepId, nextStep, prevStep, formData, isLastStep } =
+    useWizard();
   const { addToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    passwordConfirmation: "",
-    cpf: "",
-    cnpj: "",
-    companyName: "",
-  });
-  const navigate = useNavigate();
-
-  const userTypeLabels = {
-    client: "Cliente",
-    professional: "Profissional",
-    organization: "Organização",
-  };
-
-  const updateFormData = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
-  };
-
-  const validateStep = (step: number): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    switch (step) {
-      case 0: // Personal Info
-        if (!formData.firstName.trim())
-          newErrors.firstName = "firstName é obrigatório";
-        if (!formData.lastName.trim())
-          newErrors.lastName = "lastName é obrigatório";
-        if (!formData.email.trim()) newErrors.email = "E-mail é obrigatório";
-        else if (!/\S+@\S+\.\S+/.test(formData.email))
-          newErrors.email = "E-mail inválido";
-        if (!formData.phone.trim()) newErrors.phone = "phone é obrigatório";
-        break;
-
-      case 1: // Security
-        if (!formData.password) newErrors.password = "password é obrigatória";
-        else if (formData.password.length < 8)
-          newErrors.password = "password deve ter pelo menos 8 caracteres";
-        if (!formData.passwordConfirmation)
-          newErrors.passwordConfirmation =
-            "Confirmação de password é obrigatória";
-        else if (formData.password !== formData.passwordConfirmation)
-          newErrors.passwordConfirmation = "As senhas não coincidem";
-        break;
-
-      case 2: // Documentation
-        if (!formData.cpf.trim()) newErrors.cpf = "cpf é obrigatório";
-        break;
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleNext = async () => {
-    if (
-      !validateStep(SIGNUP_STEPS.findIndex((step) => step.id === currentStepId))
-    ) {
-      return;
-    }
-
-    const currentStepIndex = SIGNUP_STEPS.findIndex(
-      (step) => step.id === currentStepId
-    );
-    if (currentStepIndex < SIGNUP_STEPS.length - 2) {
-      // Changed from < 2 to < SIGNUP_STEPS.length - 2 to account for 0-indexed steps and the success step (last step)
-      nextStep();
-    } else {
-      // Final step - submit form
-      await handleSubmit();
-    }
-  };
 
   const handleSubmit = async () => {
     setIsLoading(true);
     console.log(userType);
 
     try {
-      // Simular cadastro
-      var user = {
-        email: formData.email,
-        username: formData.email,
-        password: formData.password,
-        profile: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          cpf: formData.cpf,
-          phone: formData.phone,
-        },
-        role: userType,
+      const { passwordConfirmation, ...rest } = formData;
+      const payload = {
+        ...rest,
+        username: rest.email,
       };
-      if (userType === "client") {
-        const client = {
-          ...user,
-          client: {
-            professionalReferralCode: null,
-          },
-          professional: null,
-        };
-        Meteor.call("users.create", client);
-      }
-      if (userType === "professional") {
-        const professional = {
-          ...user,
-          professional: {
-            code: generateAlphanumericCode(),
-            company: {
-              name: formData?.companyName,
-              cnpj: formData?.cnpj,
-            },
-          },
-          client: null,
-        };
-        console.log(professional);
-        Meteor.call("users.create", professional);
-      }
+
+      await Meteor.callAsync("users.create", payload);
       addToast("Conta criada com sucesso", "success");
-      nextStep(); // Go to success step
+      nextStep();
     } catch (error) {
       console.error("Erro no cadastro:", error);
     } finally {
@@ -182,31 +90,13 @@ export default function SignupWizard({ userType, onClose }: SignupWizardProps) {
     }
   };
 
-  const canProceed = () => {
-    const currentStepIndex = SIGNUP_STEPS.findIndex(
-      (step) => step.id === currentStepId
-    );
-
-    switch (currentStepIndex) {
-      case 0:
-        return (
-          formData.firstName &&
-          formData.lastName &&
-          formData.email &&
-          formData.phone
-        );
-      case 1:
-        return (
-          formData.password &&
-          formData.passwordConfirmation &&
-          formData.password === formData.passwordConfirmation &&
-          formData.password.length >= 8
-        );
-      case 2:
-        return formData.cpf;
-      default:
-        return false;
+  const handleNext = async () => {
+    if (isLastStep) {
+      await handleSubmit();
+      return;
     }
+    nextStep();
+    return;
   };
 
   return (
@@ -232,33 +122,20 @@ export default function SignupWizard({ userType, onClose }: SignupWizardProps) {
 
         {/* Wizard Content */}
         <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-8rem)]">
-          <Wizard steps={SIGNUP_STEPS}>
+          <Wizard>
             <WizardHeader />
 
             <WizardContent>
               <WizardStep stepId="personal">
-                <PersonalInfoStep
-                  formData={formData}
-                  updateFormData={updateFormData}
-                  errors={errors}
-                />
+                <PersonalInfoStep />
               </WizardStep>
 
               <WizardStep stepId="security">
-                <SecurityStep
-                  formData={formData}
-                  updateFormData={updateFormData}
-                  errors={errors}
-                />
+                <SecurityStep />
               </WizardStep>
 
               <WizardStep stepId="documentation">
-                <DocumentationStep
-                  userType={userType}
-                  formData={formData}
-                  updateFormData={updateFormData}
-                  errors={errors}
-                />
+                <DocumentationStep />
               </WizardStep>
 
               <WizardStep stepId="success">
@@ -270,7 +147,7 @@ export default function SignupWizard({ userType, onClose }: SignupWizardProps) {
               <WizardFooter
                 onNext={handleNext}
                 onPrev={prevStep}
-                nextDisabled={!canProceed()}
+                // nextDisabled={!canProceed()}
                 isLoading={isLoading}
                 finishLabel="Criar Conta"
               />

@@ -1,5 +1,3 @@
-import { ServiceModel } from "./service";
-
 export type UserRole = "client" | "professional" | "admin";
 
 export type ProfessionalData = {
@@ -10,19 +8,16 @@ export type ProfessionalData = {
 
 export type ClientData = {
   professionalReferralCode?: string;
-  services?: ServiceModel[];
 };
 
 export type UserSignupInput = {
   email: string;
   password: string;
-  profile: {
-    firstName: string;
-    lastName: string;
-    cpf: string;
-    phone: string;
-  };
+  firstName: string;
+  lastName: string;
+  cpf: string;
+  phone: string;
+  username: string;
   role: UserRole;
-  professional?: ProfessionalData;
-  client?: ClientData;
-};
+} & ClientData &
+  ProfessionalData;

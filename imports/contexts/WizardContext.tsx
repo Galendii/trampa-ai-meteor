@@ -24,6 +24,10 @@ interface WizardContextType {
   isFirstStep: boolean;
   isLastStep: boolean;
   currentStepId: string;
+  formData: Record<string, any>;
+  updateFormData: (field: string, value: any) => void;
+  setErrors: (errors: Record<string, string>) => void;
+  errors: Record<string, string>;
 }
 
 const WizardContext = createContext<WizardContextType | undefined>(undefined);
@@ -32,16 +36,25 @@ export interface WizardProviderProps {
   children: React.ReactNode;
   initialStep?: number;
   steps: WizardStep[];
+  initialFormData: Record<string, any>;
 }
 
 export const WizardProvider: React.FC<WizardProviderProps> = ({
   children,
   initialStep = 0,
   steps,
+  initialFormData,
 }) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const totalSteps = steps.length;
-
+  const updateFormData = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
+  };
   const goToStep = useCallback(
     (step: number) => {
       console.log(currentStep, step);
@@ -79,6 +92,10 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({
       isFirstStep,
       isLastStep,
       currentStepId,
+      formData,
+      updateFormData,
+      setErrors,
+      errors,
     }),
     [
       currentStep,
@@ -92,6 +109,10 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({
       isFirstStep,
       isLastStep,
       currentStepId,
+      formData,
+      updateFormData,
+      setErrors,
+      errors,
     ]
   );
 

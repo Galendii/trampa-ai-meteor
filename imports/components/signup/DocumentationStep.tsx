@@ -3,24 +3,10 @@ import React from "react";
 import { FileText, Building2 } from "lucide-react";
 import Input from "../ui/Input";
 import { Button } from "../ui/Button";
+import { useWizard } from "/imports/contexts/WizardContext";
 
-interface DocumentationStepProps {
-  formData: {
-    cpf: string;
-    cnpj?: string;
-    companyName?: string;
-  };
-  updateFormData: (field: string, value: string) => void;
-  errors?: Record<string, string>;
-  userType: "professional" | "client" | "organization";
-}
-
-export default function DocumentationStep({
-  formData,
-  updateFormData,
-  errors,
-  userType,
-}: DocumentationStepProps) {
+const DocumentationStep = () => {
+  const { updateFormData, formData, errors } = useWizard();
   const formatDocument = (value: string, type: "cpf" | "cnpj") => {
     const numbers = value.replace(/\D/g, "");
 
@@ -62,7 +48,7 @@ export default function DocumentationStep({
         <Input.Field error={errors?.cpf} />
       </Input.Root>
 
-      {userType === "professional" && (
+      {formData.role === "professional" && (
         <React.Fragment>
           <Input.Root
             type="text"
@@ -86,4 +72,5 @@ export default function DocumentationStep({
       )}
     </div>
   );
-}
+};
+export default DocumentationStep;

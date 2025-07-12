@@ -2,23 +2,34 @@ import { Meteor } from "meteor/meteor";
 import { BaseUserSchema } from "/imports/schemas/user";
 import { Accounts } from "meteor/accounts-base";
 import { Roles } from "meteor/roles";
-import { UserSignupInput } from "/imports/models/user";
+import {
+  ClientData,
+  ProfessionalData,
+  UserSignupInput,
+} from "/imports/models/user";
 
 Meteor.methods({
   async "users.create"(data: UserSignupInput): Promise<string> {
     try {
-      const { email, password, profile, role, professional, client } = data;
-
-      console.log({
-        email,
-        password,
-        profile,
-      });
+      const {
+        role,
+        cnpj,
+        code,
+        professionalReferralCode,
+        companyName,
+        ...rest
+      } = data;
+      BaseUserSchema.validate(data);
 
       const userId = await Accounts.createUserAsync({
-        email,
-        password,
-        profile,
+        username: rest.username,
+        password: rest.password,
+        profile: {
+          firstName: rest.firstName,
+          lastName: rest.lastName,
+          cpf: rest.cpf,
+          phone: rest.phone,
+        },
       });
 
       if (!userId) {
@@ -29,11 +40,16 @@ Meteor.methods({
       }
 
       let $set: Partial<Record<string, any>> = { role };
-      console.log(professional, client);
-      if (role === "client" && client) {
-        $set.client = client;
-      } else if (role === "professional" && professional) {
-        $set.professional = professional;
+      if (role === "client") {
+        $set.client = {
+          professionalReferralCode,
+        } as ClientData;
+      } else if (role === "professional") {
+        $set.professional = {
+          code,
+          companyName,
+          cnpj,
+        } as ProfessionalData;
       }
 
       await Meteor.users.updateAsync(userId, { $set });

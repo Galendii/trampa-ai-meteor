@@ -1,26 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { Lock, Eye, EyeOff, Shield } from "lucide-react";
-import { useState } from "react";
+import { Lock, Shield } from "lucide-react";
 import Input from "../ui/Input";
+import { useWizard } from "/imports/contexts/WizardContext";
 
-interface SecurityStepProps {
-  formData: {
-    password: string;
-    passwordConfirmation: string;
-  };
-  updateFormData: (field: string, value: string) => void;
-  errors?: Record<string, string>;
-}
-
-export default function SecurityStep({
-  formData,
-  updateFormData,
-  errors,
-}: SecurityStepProps) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+const SecurityStep = () => {
+  const { formData, updateFormData, errors } = useWizard();
   return (
     <div className="space-y-4">
       <div className="text-center mb-6">
@@ -76,4 +61,6 @@ export default function SecurityStep({
       </div>
     </div>
   );
-}
+};
+
+export default SecurityStep;
