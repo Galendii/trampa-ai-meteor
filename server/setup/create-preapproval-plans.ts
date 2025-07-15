@@ -21,6 +21,7 @@ export async function createPreapprovalPlans() {
       const client = new MercadoPagoConfig({
         accessToken: String(process.env.mercadoPagoAccessToken),
       });
+      console.log(client);
 
       const planAPI = new PreApprovalPlan(client);
       const mpPlans = (await Promise.all(
@@ -28,6 +29,7 @@ export async function createPreapprovalPlans() {
           async (id) => await planAPI.get({ preApprovalPlanId: id })
         )
       )) as PreApprovalPlanResponse[];
+      console.log(mpPlans);
       if (!mpPlans) throw new Meteor.Error("no-plans");
 
       const productsToCreate: Product[] = mpPlans.map((plan) => {
@@ -49,6 +51,7 @@ export async function createPreapprovalPlans() {
         };
         return product;
       });
+      console.log(productsToCreate);
 
       const createdProducts =
         await ProductsCollection.rawCollection().insertMany(productsToCreate);
