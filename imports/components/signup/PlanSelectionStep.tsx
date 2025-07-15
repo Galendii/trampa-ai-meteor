@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useWizard } from "/imports/contexts/WizardContext";
 import { Meteor } from "meteor/meteor";
 import { Product } from "/imports/models/subscriptions/product";
 import { useToast } from "/imports/contexts/ToastContext";
 import Card from "../ui/Card";
-import { Briefcase, ToolCaseIcon } from "lucide-react";
 import Button, { ButtonProps } from "../ui/Button";
 
 // import { Container } from './styles';
 
 const PlanSelectionStep: React.FC = () => {
   //   const products = useTracker(() => Meteor.subscribe("products.active"));
-  const { formData, updateFormData } = useWizard();
+  // const { formData, updateFormData } = useWizard();
   const [products, setProducts] = useState<Product[]>([]);
   const { addToast } = useToast();
   const borderColors = ["border-primary", "border-secondary"];
@@ -20,7 +18,7 @@ const PlanSelectionStep: React.FC = () => {
   console.log(products);
   useEffect(() => {
     if (products.length === 0) {
-      Meteor.call("products.all", (err, result) => {
+      Meteor.call("products.all", (err: Error, result: Product[]) => {
         if (err) {
           addToast(err.message, `danger`);
           return;

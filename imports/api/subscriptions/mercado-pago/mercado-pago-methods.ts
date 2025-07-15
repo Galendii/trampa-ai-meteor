@@ -8,31 +8,35 @@ Meteor.methods({
   async "payments.mercadoPago.createPreapproval"(
     productId: string
   ): Promise<string> {
-    check(productId, String);
-    const userId = Meteor.userId();
-    if (!userId) throw new Meteor.Error("not-authorized");
+    try {
+      check(productId, String);
+      const userId = Meteor.userId();
+      if (!userId) throw new Meteor.Error("not-authorized");
 
-    const payerEmail = Meteor.user()?.emails?.[0]?.address;
-    if (!payerEmail) throw new Meteor.Error("no-email");
-    const plan = await ProductsCollection.findOneAsync({
-      productId: productId,
-    });
-    if (!plan) throw new Meteor.Error("no-plan");
-    if (!plan.mercadoPagoPlanId) throw new Meteor.Error("no-plan-id");
+      const payerEmail = Meteor.user()?.emails?.[0]?.address;
+      if (!payerEmail) throw new Meteor.Error("no-email");
+      const plan = await ProductsCollection.findOneAsync({
+        productId: productId,
+      });
+      if (!plan) throw new Meteor.Error("no-plan");
+      if (!plan.mercadoPagoPlanId) throw new Meteor.Error("no-plan-id");
 
-    const mpClient = new MercadoPagoConfig({
-      accessToken: String(process.env.mercadoPagoAccessToken),
-    });
+      const mpClient = new MercadoPagoConfig({
+        accessToken: String(process.env.mercadoPagoAccessToken),
+      });
 
-    const preapprovalClient = new PreApproval(mpClient);
+      const preapprovalClient = new PreApproval(mpClient);
 
-    const result = await preapprovalClient.create({
-      body: {
-        preapproval_plan_id: plan?.mercadoPagoPlanId,
-        back_url: "https://google.com",
-      },
-    });
+      const result = await preapprovalClient.create({
+        body: {
+          preapproval_plan_id: plan?.mercadoPagoPlanId,
+          back_url: "https://google.com",
+        },
+      });
 
-    return String(result.init_point);
+      return String(result.init_point);
+    } catch (err) {
+      throw new Meteor.Error("create-preapproval-failed");
+    }
   },
 });
