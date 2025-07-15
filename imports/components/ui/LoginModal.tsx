@@ -6,7 +6,7 @@ import PWAInstallBanner from "./PWAInstallBanner";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "/imports/contexts/AuthContext";
 import { useToast } from "/imports/contexts/ToastContext";
-import { UserLoginType } from "/imports/models/authentication";
+import { UserLoginType } from "../../models/authentication";
 import Input from "./Input";
 import Button from "./Button";
 import GoogleLoginButton from "./google-login-button";

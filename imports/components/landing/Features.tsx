@@ -7,6 +7,7 @@ import {
   FileText,
   Target,
 } from "lucide-react";
+import Card from "../ui/Card";
 
 export default function Features() {
   const features = [
@@ -66,20 +67,19 @@ export default function Features() {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div
+              <Card.Root
                 key={index}
                 className="bg-slate-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-6">
-                  <Icon className="w-6 h-6 text-primary-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-slate-800 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
+                <Card.Icon
+                  Icon={Icon}
+                  iconClassName="w-6 h-6 text-primary-600"
+                />
+                <Card.Header
+                  title={feature.title}
+                  description={feature.description}
+                />
+              </Card.Root>
             );
           })}
         </div>

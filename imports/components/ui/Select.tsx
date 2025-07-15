@@ -30,7 +30,7 @@ export function Select({
   error,
   disabled,
   fullWidth = false,
-  className,
+  className = "",
   id,
 }: SelectProps) {
   const selectId = id || `select-${useId()}`;

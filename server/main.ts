@@ -1,7 +1,15 @@
 import { Meteor } from "meteor/meteor";
+import { Roles } from "meteor/roles";
 
 import "/imports/api/users";
-import { Roles } from "meteor/roles";
+import "/imports/api/subscriptions/";
+import { populateProductsAndPrices } from "./setup/populate-products-prices";
+import { createPreapprovalPlans } from "./setup/create-preapproval-plans";
+
+Meteor.startup(() => {
+  // populateProductsAndPrices();
+  createPreapprovalPlans();
+});
 
 Meteor.startup(async () => {
   const roles = await Meteor.roles.countDocuments();

@@ -10,7 +10,7 @@ export interface CheckboxProps
 }
 
 export function Checkbox({
-  className,
+  className = "",
   label,
   error,
   id,

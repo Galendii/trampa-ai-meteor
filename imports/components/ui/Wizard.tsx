@@ -30,7 +30,7 @@ export interface WizardHeaderProps {
 
 export function WizardHeader({
   children,
-  className,
+  className = "",
   showProgress = true,
 }: WizardHeaderProps) {
   const { currentStep, totalSteps, steps } = useWizard();
@@ -134,7 +134,7 @@ export interface WizardFooterProps {
 
 export function WizardFooter({
   children,
-  className,
+  className = "",
   showNavigation = true,
   nextLabel = "Próximo",
   prevLabel = "Voltar",

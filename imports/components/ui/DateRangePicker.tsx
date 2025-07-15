@@ -35,7 +35,7 @@ export function DateRangePicker({
   minRange = 0,
   maxRange,
   fullWidth = false,
-  className,
+  className = "",
   id,
 }: DateRangePickerProps) {
   const generatedId = `daterange-${useId()}`;

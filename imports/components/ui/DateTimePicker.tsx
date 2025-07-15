@@ -41,7 +41,7 @@ export function DateTimePicker({
   timeSlotDuration = 15,
   defaultDuration = 60,
   fullWidth = false,
-  className,
+  className = "",
   id,
   required = false,
 }: DateTimePickerProps) {

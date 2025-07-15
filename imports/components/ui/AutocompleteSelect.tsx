@@ -31,7 +31,7 @@ export function AutocompleteSelect({
   error,
   disabled,
   fullWidth = false,
-  className,
+  className = "",
   id,
   noOptionsMessage = "Nenhuma opção encontrada",
 }: AutocompleteSelectProps) {

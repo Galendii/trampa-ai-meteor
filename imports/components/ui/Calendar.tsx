@@ -59,7 +59,7 @@ export function Calendar({
   onEventDelete,
   onDateSelect,
   defaultView = "month",
-  className,
+  className = "",
   showWeekends = true,
   minTime = "06:00",
   maxTime = "22:00",

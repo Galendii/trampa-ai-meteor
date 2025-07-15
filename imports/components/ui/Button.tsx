@@ -17,7 +17,7 @@ export interface ButtonProps
 }
 
 export function Button({
-  className,
+  className = "",
   variant = "default",
   size = "default",
   fullWidth = false,

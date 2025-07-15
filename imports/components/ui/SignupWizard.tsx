@@ -16,6 +16,7 @@ import { useWizard } from "/imports/contexts/WizardContext";
 import { useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { generateAlphanumericCode } from "/imports/utils";
+import PlanSelectionStep from "../signup/PlanSelectionStep";
 
 interface SignupWizardProps {
   userType: "client" | "professional" | "organization";
@@ -136,6 +137,9 @@ export default function SignupWizard({ userType, onClose }: SignupWizardProps) {
 
               <WizardStep stepId="documentation">
                 <DocumentationStep />
+              </WizardStep>
+              <WizardStep stepId="plan">
+                <PlanSelectionStep />
               </WizardStep>
 
               <WizardStep stepId="success">

@@ -13,7 +13,7 @@ const MainLayout = lazy(() => import("/imports/layouts/main-layout"));
 // Pages
 const Home = lazy(() => import("../views/home"));
 // const ComingSoon = lazy(() => import("../pages/ComingSoon"));
-const Login = lazy(() => import("../views/login"));
+const Login = lazy(() => import("../views/login/login"));
 // const Login = lazy(() => import("../views/Login"));
 // const Dashboard = lazy(() => import("../pages/Dashboard"));
 // const Clients = lazy(() => import("../pages/Clients"));

@@ -28,7 +28,7 @@ export function DatePicker({
   minDate,
   maxDate,
   fullWidth = false,
-  className,
+  className = "",
   id,
 }: DatePickerProps) {
   const generatedId = `datepicker-${useId()}`;

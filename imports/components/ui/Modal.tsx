@@ -24,7 +24,7 @@ function Root({
   showCloseButton = true,
   closeOnOverlayClick = true,
   closeOnEscape = true,
-  className,
+  className = "",
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);

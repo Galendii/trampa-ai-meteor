@@ -6,7 +6,7 @@ import {
   ClientData,
   ProfessionalData,
   UserSignupInput,
-} from "/imports/models/user";
+} from "../../models/user";
 
 Meteor.methods({
   async "users.create"(data: UserSignupInput): Promise<string> {

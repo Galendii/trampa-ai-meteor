@@ -16,7 +16,7 @@ export function AccordionItem({
   children,
   defaultOpen = false,
   disabled = false,
-  className,
+  className = "",
 }: AccordionItemProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const id = `accordion-${useId()}`;

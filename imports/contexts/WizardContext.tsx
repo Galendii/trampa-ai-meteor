@@ -46,7 +46,8 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({
   initialFormData,
 }) => {
   const [currentStep, setCurrentStep] = useState(initialStep);
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] =
+    useState<typeof initialFormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const totalSteps = steps.length;
   const updateFormData = (field: string, value: string) => {
