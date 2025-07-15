@@ -17,7 +17,7 @@ export async function createPreapprovalPlans() {
       "2c93808497f5fac3019801a2c505044b",
     ];
     const client = new MercadoPagoConfig({
-      accessToken: Meteor.settings.mercadoPago.accessToken,
+      accessToken: Meteor.settings.mercadoPagoAccessToken,
     });
 
     const planAPI = new PreApprovalPlan(client);

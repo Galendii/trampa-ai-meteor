@@ -9,21 +9,23 @@ Meteor.methods({
     productId: string
   ): Promise<string> {
     check(productId, String);
+    const userId = Meteor.userId();
+    if (!userId) throw new Meteor.Error("not-authorized");
+
+    const payerEmail = Meteor.user()?.emails?.[0]?.address;
+    if (!payerEmail) throw new Meteor.Error("no-email");
+    const plan = await MercadoPagoPlansCollection.findOneAsync({
+      productId: productId,
+    });
+    if (!plan) throw new Meteor.Error("no-plan");
+    if (!plan.mercadoPagoId) throw new Meteor.Error("no-plan-id");
 
     const mpClient = new MercadoPagoConfig({
-      accessToken: Meteor.settings.mercadoPago.accessToken,
+      accessToken: Meteor.settings.mercadoPagoAccessToken,
     });
 
     const preapprovalClient = new PreApproval(mpClient);
 
-    const userId = Meteor.userId();
-    if (!userId) throw new Meteor.Error("not-authorized");
-
-    const plan = await MercadoPagoPlansCollection.findOneAsync({
-      productId: productId,
-    });
-    const payerEmail = Meteor.user()?.emails?.[0]?.address;
-    if (!payerEmail) throw new Meteor.Error("no-email");
     const result = await preapprovalClient.create({
       body: {
         preapproval_plan_id: plan?.mercadoPagoId,

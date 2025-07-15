@@ -6,6 +6,7 @@ Meteor.methods({
     return ProductsCollection.find(
       {},
       {
+        sort: { amount: 1 },
         fields: {
           name: 1,
           description: 1,

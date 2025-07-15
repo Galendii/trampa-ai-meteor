@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  Building2,
-  User,
-  UserCheck,
-  ArrowRight,
-  Shield,
-  Sparkles,
-} from "lucide-react";
+import { Building2, User, UserCheck, ArrowRight } from "lucide-react";
 import { WizardProvider } from "/imports/contexts/WizardContext";
 import SignupWizard, {
   CLIENT_STEPS,
@@ -15,9 +8,9 @@ import SignupWizard, {
 } from "/imports/components/ui/SignupWizard";
 import LoginModal from "/imports/components/ui/LoginModal";
 import Card from "/imports/components/ui/Card";
-import { Button } from "/imports/components/button";
 import LoginHeader from "./components/login-header";
 import Features from "./components/features";
+import Button from "/imports/components/ui/Button";
 
 type UserType = "client" | "professional" | "organization" | null;
 
@@ -72,7 +65,8 @@ const LoginPage: React.FC = () => {
       color: "from-primary-500 to-primary-600",
       bgColor: "bg-primary-50",
       borderColor: "border-primary-200",
-      hoverColor: "hover:border-primary-300",
+      hoverColor: "border-primary-300",
+      iconColor: "text-primary",
     },
     {
       id: "professional" as const,
@@ -82,7 +76,8 @@ const LoginPage: React.FC = () => {
       color: "from-secondary-500 to-secondary-600",
       bgColor: "bg-secondary-50",
       borderColor: "border-secondary-200",
-      hoverColor: "hover:border-secondary-300",
+      hoverColor: "border-secondary-300",
+      iconColor: "text-secondary",
     },
     {
       id: "organization" as const,
@@ -92,7 +87,8 @@ const LoginPage: React.FC = () => {
       color: "from-purple-500 to-purple-600",
       bgColor: "bg-purple-50",
       borderColor: "border-purple-200",
-      hoverColor: "hover:border-purple-300",
+      hoverColor: "border-purple-300",
+      iconColor: "text-purple",
     },
   ];
 
@@ -137,7 +133,11 @@ const LoginPage: React.FC = () => {
                 borderColor={type.borderColor}
                 hoverColor={type.hoverColor}
               >
-                <Card.Icon bgColor={type.bgColor} Icon={Icon} />
+                <Card.Icon
+                  bgColor={type.bgColor}
+                  Icon={Icon}
+                  iconClassName={type.iconColor}
+                />
 
                 <Card.Header
                   title={type.title}
@@ -158,6 +158,7 @@ const LoginPage: React.FC = () => {
                   <Button
                     onClick={() => handleUserTypeSelect(type.id, "signup")}
                     variant="outline"
+                    className="w-full"
                   >
                     Criar Conta
                   </Button>

@@ -49,10 +49,10 @@ export const CLIENT_STEPS = [
 ];
 
 export const PROFESSIONAL_STEPS = [
+  { id: "plan", title: "Plano", icon: ClipboardList },
   { id: "personal", title: "Dados Pessoais", icon: User },
   { id: "security", title: "Segurança", icon: Lock },
   { id: "documentation", title: "Documentação", icon: FileText },
-  { id: "plan", title: "Plano", icon: ClipboardList },
   { id: "success", title: "Sucesso", icon: Check },
 ];
 

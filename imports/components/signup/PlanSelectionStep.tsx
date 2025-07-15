@@ -1,10 +1,11 @@
-import { useTracker } from "meteor/react-meteor-data";
 import React, { useEffect, useState } from "react";
-import { ProductsCollection } from "/imports/api/subscriptions";
 import { useWizard } from "/imports/contexts/WizardContext";
 import { Meteor } from "meteor/meteor";
 import { Product } from "/imports/models/subscriptions/product";
 import { useToast } from "/imports/contexts/ToastContext";
+import Card from "../ui/Card";
+import { Briefcase, ToolCaseIcon } from "lucide-react";
+import Button, { ButtonProps } from "../ui/Button";
 
 // import { Container } from './styles';
 
@@ -13,7 +14,10 @@ const PlanSelectionStep: React.FC = () => {
   const { formData, updateFormData } = useWizard();
   const [products, setProducts] = useState<Product[]>([]);
   const { addToast } = useToast();
-
+  const borderColors = ["border-primary", "border-secondary"];
+  const textColors = ["text-primary", "text-secondary"];
+  const buttonVariants: ButtonProps["variant"][] = ["default", "secondary"];
+  console.log(products);
   useEffect(() => {
     if (products.length === 0) {
       Meteor.call("products.all", (err, result) => {
@@ -29,22 +33,37 @@ const PlanSelectionStep: React.FC = () => {
   return (
     <div>
       <h1>Planos</h1>
-      <ul>
-        {products.map((product) => (
-          <li key={product._id}>
-            <label>
-              <input
-                type="radio"
-                name="plan"
-                value={product._id}
-                checked={formData.productId === product._id}
-                onChange={(e) => updateFormData("productId", e.target.value)}
-              />
-              <strong>{product.name}</strong> - {product.description}
-            </label>
-          </li>
+      <div className="flex justify-around items-center p-8 md:p-4">
+        {products.map((product, index) => (
+          <button className="hover:scale-105">
+            <Card.Root
+              borderColor={borderColors[index]}
+              hoverColor={borderColors[index]}
+              key={product._id}
+            >
+              <h3 className={`${textColors[index]} text-lg mb-2 font-bold`}>
+                {product.name}
+              </h3>
+              <p>{product.description}</p>
+              <p>
+                Assine agora por apenas:
+                {new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                }).format(product.amount)}
+              </p>
+              <Button
+                variant={
+                  buttonVariants[index] as unknown as ButtonProps["variant"]
+                }
+                className="mt-5"
+              >
+                Assinar agora!
+              </Button>
+            </Card.Root>
+          </button>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

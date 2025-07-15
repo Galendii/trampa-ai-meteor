@@ -12,15 +12,15 @@ type RootProps = {
 const Root: React.FC<RootProps> = ({
   children,
   borderColor = "border-slate-200",
-  hoverColor = "hover:border-slate-300",
+  hoverColor = "border-slate-300",
   className = "",
 }) => {
   return (
     <div
       className={`
-                  relative bg-white rounded-2xl border-2 ${borderColor} ${hoverColor}
+                  relative bg-white rounded-2xl border-2 ${borderColor} hover:${hoverColor}
                   transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group
-                  p-8 md:p4
+                  p-8 md:p-4
                   ${className}
                 `}
     >
@@ -45,7 +45,7 @@ const Icon = ({
       className={`w-12 h-12 sm:w-16 sm:h-16 ${bgColor} rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 ${className}`}
     >
       <Icon
-        className={`"w-5 h-5 sm:w-6 sm:h-6 text-primary-600" ${iconClassName}`}
+        className={`w-5 h-5 sm:w-6 sm:h-6 text-primary-600 ${iconClassName}`}
       />
     </div>
   );
