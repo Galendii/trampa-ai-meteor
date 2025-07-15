@@ -171,6 +171,7 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Modals */}
+
       {showLoginModal && selectedUserType && (
         <LoginModal
           isOpen={showLoginModal}
